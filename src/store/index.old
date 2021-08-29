@@ -1,0 +1,101 @@
+import { createStore } from "redux";
+import { configureStore, createSlice } from "@reduxjs/toolkit";
+
+const initialCounterState = {
+  counter: 0,
+  isDisplayed: true,
+};
+
+// CLASSIC WAY
+
+// const counterReducer = (state = initialState, action) => {
+//   if (action.type === "INCREMENT") {
+//     return {
+//       counter: state.counter + 1,
+//       isDisplayed: state.isDisplayed,
+//     };
+//   }
+
+//   if (action.type === "DECREMENT") {
+//     return {
+//       counter: state.counter - 1,
+//       isDisplayed: state.isDisplayed,
+//     };
+//   }
+
+//   if (action.type === "INCREASE_BY") {
+//     return {
+//       counter: state.counter + action.value,
+//       isDisplayed: state.isDisplayed,
+//     };
+//   }
+
+//   if (action.type === "TOGGLE") {
+//     return {
+//       counter: state.counter,
+//       isDisplayed: !state.isDisplayed,
+//     };
+//   }
+
+//   return state;
+// };
+
+// const store = createStore(counterReducer);
+// export default store;
+
+// MODERN WAY : Redux Toolkit
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState: initialCounterState,
+  reducers: {
+    // ? : Will not work. Why the method version bellow works but the property which contains the functions does not work ?
+    // increment: (state) => state.counter++,
+
+    increment(state) {
+      state.counter++;
+    },
+
+    decrement(state) {
+      state.counter--;
+    },
+
+    toggle(state) {
+      state.isDisplayed = !state.isDisplayed;
+    },
+
+    increaseBy(state, action) {
+      state.counter = state.counter + action.payload;
+    },
+  },
+});
+
+const initialAuthState = {
+  isConnected: false,
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isConnected = true;
+    },
+
+    logout(state) {
+      state.isConnected = false;
+    },
+  },
+});
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    auth: authSlice.reducer,
+  },
+});
+
+export const counterActions = counterSlice.actions;
+export const authActions = authSlice.actions;
+
+export default store;
